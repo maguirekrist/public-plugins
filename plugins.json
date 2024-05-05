@@ -118,14 +118,14 @@
 }, {
   "projectUrl": "https://discord.gg/lucid-plugs",
   "provider": "lucid-plugins",
-  "name": "Lucid Hotkeys",
+  "name": "Lucid Hotkeys 1",
   "description": "Setup hotkeys that can do a variety of different actions.",
-  "id": "lucidhotkeys-plugin",
+  "id": "lucidhotkeysone-plugin",
   "releases": [{
     "date": "2024-05-05",
-    "sha512sum": "F388EEA04B2C948458BC5661D98CE678648921AEFE84C2BDB452467CFC13BE107329B23B00843CF54738BD784C979A5673BF60B132BC29937896395620E59BBC",
-    "version": "1.2.10",
-    "url": "https://github.com/lucid-plugins/public-plugins/blob/master/release/lucid-hotkeys-1.2.10.jar?raw=true",
+    "sha512sum": "987519668BEF3D378E65D201CFB588C05312F7B1D8821FA776BAD2271193092EB345FAE266B8184949C06D04D4BD8C28F099A871DCEA5AC6EC6F392850ADF32D",
+    "version": "1.3.0",
+    "url": "https://github.com/lucid-plugins/public-plugins/blob/master/release/lucid-hotkeys-1.3.0.jar?raw=true",
     "requires": "^1.0.0"
   }]
 }, {
