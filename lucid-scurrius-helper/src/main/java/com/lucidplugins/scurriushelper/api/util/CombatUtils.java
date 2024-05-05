@@ -29,6 +29,24 @@ public class CombatUtils
         Prayers.toggle(prayer);
     }
 
+    public static void deactivatePrayer(Client client, Prayer prayer)
+    {
+        if (client == null || client.getBoostedSkillLevel(Skill.PRAYER) == 0 || !client.isPrayerActive(prayer))
+        {
+            return;
+        }
+
+        Prayers.toggle(prayer);
+    }
+
+    public static void deactivatePrayers(Client client)
+    {
+        for (Prayer p : Prayer.values())
+        {
+            deactivatePrayer(client, p);
+        }
+    }
+
     public static int getSpecEnergy(Client client)
     {
         return Vars.getVarp(300) / 10;

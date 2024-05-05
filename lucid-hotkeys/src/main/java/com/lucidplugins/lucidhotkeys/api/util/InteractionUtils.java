@@ -7,9 +7,26 @@ import net.unethicalite.api.entities.TileItems;
 import net.unethicalite.api.movement.Movement;
 import net.unethicalite.api.packets.WidgetPackets;
 import net.unethicalite.client.Static;
+import java.util.function.Predicate;
 
 public class InteractionUtils
 {
+    public static boolean isRunEnabled()
+    {
+        return Movement.isRunEnabled();
+    }
+
+    public static void toggleRun()
+    {
+        Movement.toggleRun();
+    }
+
+    public static int getRunEnergy()
+    {
+        return Movement.getRunEnergy();
+    }
+
+
     public static boolean isWidgetHidden(int parentId, int childId, int grandchildId)
     {
         Widget target = Static.getClient().getWidget(parentId, childId);
@@ -59,6 +76,70 @@ public class InteractionUtils
         widgetInteract(parentId, childId, -1, action);
     }
 
+    public static int getWidgetSpriteId(int parentId, int childId)
+    {
+        return getWidgetSpriteId(parentId, childId, -1);
+    }
+
+    public static int getWidgetSpriteId(int parentId, int childId, int grandchildId)
+    {
+        Widget target = Static.getClient().getWidget(parentId, childId);
+        if (grandchildId != -1)
+        {
+            if (target == null || target.isSelfHidden())
+            {
+                return -1;
+            }
+
+            Widget subTarget = target.getChild(grandchildId);
+            if (subTarget != null)
+            {
+                return subTarget.getSpriteId();
+            }
+        }
+
+        if (target != null)
+        {
+            return target.getSpriteId();
+        }
+
+        return -1;
+    }
+
+    public static String getWidgetText(int parentId, int childId)
+    {
+        return getWidgetText(parentId, childId, -1);
+    }
+
+    public static String getWidgetText(int parentId, int childId, int grandchildId)
+    {
+        Widget target = Static.getClient().getWidget(parentId, childId);
+        if (grandchildId != -1)
+        {
+            if (target == null || target.isSelfHidden())
+            {
+                return "null";
+            }
+
+            Widget subTarget = target.getChild(grandchildId);
+            if (subTarget != null)
+            {
+                return subTarget.getText() != null ? subTarget.getText() : "null";
+            }
+            else
+            {
+                return "null";
+            }
+        }
+
+        if (target != null)
+        {
+            return target.getText() != null ? target.getText() : "null";
+        }
+
+        return "null";
+    }
+
     public static void queueResumePause(int parentId, int childId, int subchildId)
     {
         WidgetPackets.queueResumePauseWidgetPacket(parentId << 16 | childId, subchildId);
@@ -70,12 +151,12 @@ public class InteractionUtils
         Static.getClient().invokeMenuAction("Cancel", "", 0, 1006, 0, 0);
     }
 
-    public static void useItemOnWallObject(Client client, Item item, WallObject wallObject)
+    public static void useItemOnWallObject(Item item, WallObject wallObject)
     {
-        final ItemComposition itemComposition = client.getItemComposition(item.getId());
-        final ObjectComposition objectComposition = client.getObjectDefinition(wallObject.getId());
-        client.invokeMenuAction("Use", "<col=ff9040>" + itemComposition.getName() + "</col>", 0, MenuAction.WIDGET_TARGET.getId(), item.getSlot(), InventoryUtils.calculateWidgetId(client, item), item.getId(), -1);
-        client.invokeMenuAction("Use", "<col=ff9040>" + itemComposition.getName() + "</col><col=ffffff> -> <col=ffff>" + objectComposition.getName(), wallObject.getId(), MenuAction.WIDGET_TARGET_ON_GAME_OBJECT.getId(), wallObject.getLocalLocation().getSceneX(), wallObject.getLocalLocation().getSceneY(), -1, -1);
+        final ItemComposition itemComposition = Static.getClient().getItemComposition(item.getId());
+        final ObjectComposition objectComposition = Static.getClient().getObjectDefinition(wallObject.getId());
+        Static.getClient().invokeMenuAction("Use", "<col=ff9040>" + itemComposition.getName() + "</col>", 0, MenuAction.WIDGET_TARGET.getId(), item.getSlot(), InventoryUtils.calculateWidgetId(item), item.getId(), -1);
+        Static.getClient().invokeMenuAction("Use", "<col=ff9040>" + itemComposition.getName() + "</col><col=ffffff> -> <col=ffff>" + objectComposition.getName(), wallObject.getId(), MenuAction.WIDGET_TARGET_ON_GAME_OBJECT.getId(), wallObject.getLocalLocation().getSceneX(), wallObject.getLocalLocation().getSceneY(), -1, -1);
     }
 
     public static void useItemOnNPC(Item item, NPC npc)
@@ -83,26 +164,6 @@ public class InteractionUtils
         if (item != null && npc != null)
         {
             item.useOn(npc);
-        }
-    }
-
-    public static boolean sleep(Client client, long ms)
-    {
-        if (client.isClientThread())
-        {
-            return false;
-        }
-        else
-        {
-            try
-            {
-                Thread.sleep(ms);
-                return true;
-            }
-            catch (InterruptedException var3)
-            {
-                return false;
-            }
         }
     }
 
@@ -160,9 +221,22 @@ public class InteractionUtils
         }
     }
 
+    public static void interactWithTileItem(TileItem item, String action)
+    {
+        if (item != null)
+        {
+            item.interact(action);
+        }
+    }
+
     public static float distanceTo2DHypotenuse(WorldPoint main, WorldPoint other)
     {
         return (float)Math.hypot((double)(main.getX() - other.getX()), (double)(main.getY() - other.getY()));
+    }
+
+    public static TileItem nearestTileItem(Predicate<TileItem> filter)
+    {
+        return TileItems.getNearest(filter);
     }
 
 }

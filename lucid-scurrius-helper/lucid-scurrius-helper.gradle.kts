@@ -1,5 +1,5 @@
 
-version = "1.0.1"
+version = "1.0.2"
 
 project.extra["PluginName"] = "Lucid Scurrius Helper"
 project.extra["PluginDescription"] = "Dodges Scurrius' falling ceiling attack and re-attacks"

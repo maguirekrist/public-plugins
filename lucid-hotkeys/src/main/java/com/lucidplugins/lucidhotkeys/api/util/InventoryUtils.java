@@ -1,7 +1,6 @@
 package com.lucidplugins.lucidhotkeys.api.util;
 
 import com.lucidplugins.lucidhotkeys.api.item.SlottedItem;
-import net.runelite.api.Client;
 import net.runelite.api.Item;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetInfo;
@@ -26,14 +25,24 @@ public class InventoryUtils
         Static.getClient().invokeMenuAction("Cancel", "", 0, 1006, 0, 0);
     }
 
-    public static List<SlottedItem> getAll()
+    public static List<SlottedItem> getAllSlotted()
     {
         return Inventory.getAll().stream().map(item -> new SlottedItem(item.getId(), item.getQuantity(), item.getSlot())).collect(Collectors.toList());
     }
 
-    public static List<SlottedItem> getAll(Predicate<SlottedItem> filter)
+    public static List<SlottedItem> getAllSlotted(Predicate<SlottedItem> filter)
     {
         return Inventory.getAll().stream().map(item -> new SlottedItem(item.getId(), item.getQuantity(), item.getSlot())).filter(filter).collect(Collectors.toList());
+    }
+
+    public static List<Item> getAll()
+    {
+        return Inventory.getAll().stream().map(item -> new Item(item.getId(), item.getQuantity())).collect(Collectors.toList());
+    }
+
+    public static List<Item> getAll(Predicate<Item> filter)
+    {
+        return Inventory.getAll().stream().map(item -> new Item(item.getId(), item.getQuantity())).filter(filter).collect(Collectors.toList());
     }
 
     public static boolean contains(String itemName)
@@ -41,9 +50,9 @@ public class InventoryUtils
         return Inventory.contains(itemName);
     }
 
-    public static int calculateWidgetId(Client client, Item item)
+    public static int calculateWidgetId(Item item)
     {
-        Widget inventoryWidget = client.getWidget(WidgetInfo.INVENTORY);
+        Widget inventoryWidget = Static.getClient().getWidget(WidgetInfo.INVENTORY);
         if (inventoryWidget == null)
         {
             return -1;
@@ -62,9 +71,9 @@ public class InventoryUtils
         return Inventory.getFreeSlots();
     }
 
-    public static boolean itemHasAction(Client client, int itemId, String action)
+    public static boolean itemHasAction(int itemId, String action)
     {
-        return Arrays.stream(client.getItemDefinition(itemId).getInventoryActions()).anyMatch(a -> a != null && a.equalsIgnoreCase(action));
+        return Arrays.stream(Static.getClient().getItemDefinition(itemId).getInventoryActions()).anyMatch(a -> a != null && a.equalsIgnoreCase(action));
     }
 
     public static void itemInteract(int itemId, String action)
@@ -80,10 +89,12 @@ public class InventoryUtils
     {
         Item inSlot = Inventory.getItem(slot);
 
-        if (inSlot != null)
+        if (inSlot == null || !itemHasAction(inSlot.getId(), action))
         {
-            inSlot.interact(action);
+            return;
         }
+
+        inSlot.interact(action);
     }
 
     public static Item getFirstItem(int id)

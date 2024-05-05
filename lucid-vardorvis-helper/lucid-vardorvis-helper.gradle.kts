@@ -1,5 +1,5 @@
 
-version = "1.0.6"
+version = "1.0.7"
 
 project.extra["PluginName"] = "Lucid Vardorvis Helper"
 project.extra["PluginDescription"] = "Helps with Vardorvis fight"

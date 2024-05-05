@@ -1,17 +1,14 @@
 package com.lucidplugins.scurriushelper;
 
 import com.google.inject.Provides;
+import com.lucidplugins.scurriushelper.api.util.CombatUtils;
 import com.lucidplugins.scurriushelper.api.util.InteractionUtils;
 import com.lucidplugins.scurriushelper.api.util.NpcUtils;
 import lombok.Getter;
-import net.runelite.api.Client;
-import net.runelite.api.GraphicsObject;
-import net.runelite.api.NPC;
+import net.runelite.api.*;
 import net.runelite.api.coords.LocalPoint;
 import net.runelite.api.coords.WorldPoint;
-import net.runelite.api.events.GameTick;
-import net.runelite.api.events.GraphicsObjectCreated;
-import net.runelite.api.events.NpcSpawned;
+import net.runelite.api.events.*;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
@@ -20,6 +17,7 @@ import net.runelite.client.plugins.PluginDescriptor;
 import org.pf4j.Extension;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,10 +56,64 @@ public class ScurriusHelperPlugin extends Plugin
 
     private int lastRatTick = 0;
 
+
+    private int lastActivateTick = 0;
+
+    private List<Projectile> attacks = new ArrayList<>();
+
     @Provides
     ScurriusHelperConfig getConfig(ConfigManager configManager)
     {
         return configManager.getConfig(ScurriusHelperConfig.class);
+    }
+
+
+    @Subscribe
+    private void onAnimationChanged(AnimationChanged event)
+    {
+        if (!(event.getActor() instanceof NPC))
+        {
+            return;
+        }
+
+        NPC npc = (NPC) event.getActor();
+        if (npc.getName() != null && npc.getName().equals("Scurrius") && npc.getAnimation() == 10705 && NpcUtils.getNearestNpc("Giant rat") == null)
+        {
+            if (config.autoPray())
+            {
+                CombatUtils.deactivatePrayers(client);
+            }
+        }
+    }
+
+    @Subscribe
+    private void onProjectileMoved(ProjectileMoved event)
+    {
+        final Projectile projectile = event.getProjectile();
+        if (projectile.getRemainingCycles() != (projectile.getEndCycle() - projectile.getStartCycle()))
+        {
+            return;
+        }
+
+        if (projectile.getId() != 2642 && projectile.getId() != 2640)
+        {
+            return;
+        }
+
+        NPC scurrius = NpcUtils.getNearestNpc("Scurrius");
+        if (scurrius == null || event.getProjectile().getInteracting() != client.getLocalPlayer())
+        {
+            return;
+        }
+
+        if (!attacks.contains(projectile))
+        {
+            attacks.add(projectile);
+            if (config.autoPray())
+            {
+                CombatUtils.deactivatePrayer(client, Prayer.PROTECT_FROM_MELEE);
+            }
+        }
     }
 
     @Subscribe
@@ -85,6 +137,10 @@ public class ScurriusHelperPlugin extends Plugin
         {
             return;
         }
+
+        handlePrayers();
+
+        attacks.removeIf(proj -> proj.getRemainingCycles() < 30);
 
         justDodged = false;
 
@@ -152,6 +208,59 @@ public class ScurriusHelperPlugin extends Plugin
                         NpcUtils.attackNpc(scurrius);
                     }
                 }
+            }
+        }
+    }
+
+    private void handlePrayers()
+    {
+        if (!config.autoPray())
+        {
+            return;
+        }
+
+        Prayer prayer = null;
+        for (Projectile projectile : attacks)
+        {
+            int cyclesToTicks = ((int)Math.floor(projectile.getRemainingCycles() / 30.0F));
+            if (cyclesToTicks <= 1)
+            {
+                if (projectile.getId() == 2642)
+                {
+                    prayer = Prayer.PROTECT_FROM_MISSILES;
+                }
+                else
+                {
+                    prayer = Prayer.PROTECT_FROM_MAGIC;
+                }
+            }
+        }
+
+        if (prayer != null)
+        {
+            CombatUtils.activatePrayer(client, prayer);
+        }
+        else
+        {
+            NPC targetingMe = NpcUtils.getNearestNpc(npc ->
+                    (npc.getName() != null && npc.getName().equals("Giant rat")) ||
+                            (npc.getName() != null && npc.getName().equals("Scurrius") && npc.getPoseAnimation() == 10687 && npc.getAnimation() != 10705));
+            if (targetingMe != null)
+            {
+                if (attacks.size() == 0)
+                {
+                    CombatUtils.activatePrayer(client, Prayer.PROTECT_FROM_MELEE);
+                    lastActivateTick = client.getTickCount();
+                }
+            }
+            else
+            {
+                if (client.isPrayerActive(Prayer.PROTECT_FROM_MELEE) && client.getTickCount() - lastActivateTick < 3 || attacks.size() > 0)
+                {
+                    return;
+                }
+
+                CombatUtils.deactivatePrayers(client);
             }
         }
     }

@@ -30,7 +30,7 @@ public class CombatUtils
 
     public static void toggleQuickPrayers(Client client)
     {
-        if (client == null || (client.getBoostedSkillLevel(Skill.PRAYER) == 0 && !Prayers.isQuickPrayerEnabled()))
+        if (client == null || client.getBoostedSkillLevel(Skill.PRAYER) == 0)
         {
             return;
         }
@@ -40,7 +40,7 @@ public class CombatUtils
 
     public static void activateQuickPrayers(Client client)
     {
-        if (client == null || (client.getBoostedSkillLevel(Skill.PRAYER) == 0 && !Prayers.isQuickPrayerEnabled()))
+        if (client == null || client.getBoostedSkillLevel(Skill.PRAYER) == 0)
         {
             return;
         }
@@ -55,5 +55,4 @@ public class CombatUtils
     {
         return client.getVarbitValue(Varbits.QUICK_PRAYER) == 1;
     }
-
 }
