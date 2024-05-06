@@ -4,6 +4,8 @@ import net.runelite.api.*;
 import net.unethicalite.api.entities.TileObjects;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.function.Predicate;
 
 public class GameObjectUtils
 {
@@ -37,5 +39,25 @@ public class GameObjectUtils
         }
 
         return Arrays.stream(composition.getActions()).anyMatch(s -> s != null && s.equalsIgnoreCase(action));
+    }
+
+    public static TileObject nearest(String name)
+    {
+        return TileObjects.getNearest(name);
+    }
+
+    public static TileObject nearest(int id)
+    {
+        return TileObjects.getNearest(id);
+    }
+
+    public static TileObject nearest(Predicate<TileObject> filter)
+    {
+        return TileObjects.getNearest(filter);
+    }
+
+    public static List<TileObject> getAll(Predicate<TileObject> filter)
+    {
+        return TileObjects.getAll(filter);
     }
 }
