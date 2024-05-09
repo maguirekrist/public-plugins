@@ -1,4 +1,4 @@
-version = "1.0.0"
+version = "1.0.1"
 
 project.extra["PluginName"] = "Lucid Hotkeys 2"
 project.extra["PluginDescription"] = "Like Lucid Hotkeys 1, but much better"
