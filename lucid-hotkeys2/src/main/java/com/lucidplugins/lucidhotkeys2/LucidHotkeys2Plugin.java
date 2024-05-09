@@ -1080,6 +1080,9 @@ public class LucidHotkeys2Plugin extends Plugin implements KeyListener
                 MousePackets.queueClickPacket();
                 Static.getClient().invokeMenuAction("", "", 2, MenuAction.CC_OP.getId(), -1, packedId2);
                 break;
+            case INVOKE_MENU_ACTION:
+                MousePackets.queueClickPacket();
+                Static.getClient().invokeMenuAction("", "", (int) params.get(3), (int) params.get(2), (int) params.get(0), (int) params.get(1));
         }
     }
 
