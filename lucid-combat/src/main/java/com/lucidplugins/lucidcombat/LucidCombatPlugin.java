@@ -2,12 +2,15 @@ package com.lucidplugins.lucidcombat;
 
 import com.google.inject.Provides;
 import com.lucidplugins.lucidcombat.api.item.SlottedItem;
+import com.lucidplugins.lucidcombat.api.spells.Runes;
+import com.lucidplugins.lucidcombat.api.spells.WidgetInfo;
 import com.lucidplugins.lucidcombat.api.util.*;
 import lombok.Getter;
 import net.runelite.api.*;
 import net.runelite.api.coords.LocalPoint;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.events.*;
+import net.runelite.api.widgets.Widget;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
@@ -20,6 +23,8 @@ import net.runelite.client.input.KeyManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.overlay.OverlayManager;
+import net.unethicalite.api.packets.MousePackets;
+import net.unethicalite.client.Static;
 import org.pf4j.Extension;
 
 import javax.inject.Inject;
@@ -463,6 +468,11 @@ public class LucidCombatPlugin extends Plugin implements KeyListener
             {
                 actionTakenThisTick = handleReAttack();
             }
+        }
+
+        if (!actionTakenThisTick)
+        {
+            actionTakenThisTick = handleThralls();
         }
 
         if (!actionTakenThisTick)
@@ -956,6 +966,80 @@ public class LucidCombatPlugin extends Plugin implements KeyListener
         return nearest;
     }
 
+    private boolean handleThralls()
+    {
+        if (client.getVarbitValue(Varbits.RESURRECT_THRALL_COOLDOWN) > 0 || client.getVarbitValue(Varbits.RESURRECT_THRALL) == 1)
+        {
+            return false;
+        }
+
+        if (getInactiveTicks() > 25 || !hasRunesForThrall() || !InventoryUtils.contains("Book of the dead"))
+        {
+            return false;
+        }
+
+        WidgetInfo spellInfo2 = config.thrallType().getThrallSpell().getWidget();
+        if (spellInfo2 == null)
+        {
+            return false;
+        }
+
+        int bookId = client.getVarbitValue(Varbits.SPELLBOOK);
+
+        if (bookId != 3)
+        {
+            return false;
+        }
+
+        Widget widget = client.getWidget(spellInfo2.getPackedId());
+        if (widget == null)
+        {
+            return false;
+        }
+        MousePackets.queueClickPacket();
+        Static.getClient().invokeMenuAction("", "", 1, MenuAction.CC_OP.getId(), -1, spellInfo2.getPackedId());
+
+        return true;
+    }
+
+    private boolean hasRunesForThrall()
+    {
+        final int air = totalCount(ItemID.AIR_RUNE);
+        final int dust = totalCount(ItemID.DUST_RUNE);
+        final int smoke = totalCount(ItemID.SMOKE_RUNE);
+        final int mist = totalCount(ItemID.MIST_RUNE);
+        final int earth = totalCount(ItemID.EARTH_RUNE);
+        final int mud = totalCount(ItemID.MUD_RUNE);
+        final int lava = totalCount(ItemID.LAVA_RUNE);
+        final int steam = totalCount(ItemID.STEAM_RUNE);
+        final int fire = totalCount(ItemID.FIRE_RUNE);
+        final int mind = totalCount(ItemID.MIND_RUNE);
+        final int death = totalCount(ItemID.DEATH_RUNE);
+        final int blood = totalCount(ItemID.BLOOD_RUNE);
+        final int cosmic = totalCount(ItemID.COSMIC_RUNE);
+
+        final int totalAir = air + dust + smoke + mist;
+        final int totalEarth = earth + dust + mud + lava;
+        final int totalFire = fire + lava + smoke + steam;
+
+        switch (config.thrallType())
+        {
+            case LESSER_GHOST:
+            case LESSER_SKELETON:
+            case LESSER_ZOMBIE:
+                return totalAir >= 10 && cosmic >= 1 && mind >= 5;
+            case SUPERIOR_GHOST:
+            case SUPERIOR_SKELETON:
+            case SUPERIOR_ZOMBIE:
+                return totalEarth >= 10 && cosmic >= 1 && death >= 5;
+            case GREATER_GHOST:
+            case GREATER_SKELETON:
+            case GREATER_ZOMBIE:
+                return totalFire >= 10 && cosmic >= 1 && blood >= 5;
+        }
+        return false;
+    }
+
     private boolean handleAutoCombat()
     {
         if (!autoCombatRunning)
@@ -1082,7 +1166,7 @@ public class LucidCombatPlugin extends Plugin implements KeyListener
         return true;
     }
 
-    private int totalCount(int itemId, int runeIndex)
+    private int totalCount(int itemId)
     {
         int count = InventoryUtils.count(itemId);
 
@@ -1090,6 +1174,8 @@ public class LucidCombatPlugin extends Plugin implements KeyListener
         {
             return count;
         }
+
+        int runeIndex = Runes.getVarbitIndexForItemId(itemId);
 
         if (idInRunePouch1() == runeIndex)
         {
@@ -1161,12 +1247,12 @@ public class LucidCombatPlugin extends Plugin implements KeyListener
 
     private boolean hasAlchRunes(boolean highAlch)
     {
-        int natCount = totalCount(ItemID.NATURE_RUNE, 10);
+        int natCount = totalCount(ItemID.NATURE_RUNE);
 
-        int fireRunes = totalCount(ItemID.FIRE_RUNE, 4);
-        int lavaRunes = totalCount(ItemID.LAVA_RUNE, 18);
-        int steamRunes = totalCount(ItemID.STEAM_RUNE, 19);
-        int smokeRunes = totalCount(ItemID.SMOKE_RUNE, 20);
+        int fireRunes = totalCount(ItemID.FIRE_RUNE);
+        int lavaRunes = totalCount(ItemID.LAVA_RUNE);
+        int steamRunes = totalCount(ItemID.STEAM_RUNE);
+        int smokeRunes = totalCount(ItemID.SMOKE_RUNE);
         int total = (fireRunes + lavaRunes + smokeRunes + steamRunes);
 
         boolean hasFireRunes = total >= (highAlch ? 5 : 3);

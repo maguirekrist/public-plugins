@@ -944,7 +944,7 @@ public class LucidHotkeys2Plugin extends Plugin implements KeyListener
                         return;
                     }
                     MousePackets.queueClickPacket();
-                    Static.getClient().invokeMenuAction("", "", 1, MenuAction.CC_OP.getId(), -1, spellInfo2.getPackedId(), -1, -1);
+                    Static.getClient().invokeMenuAction("", "", 1, MenuAction.CC_OP.getId(), -1, spellInfo2.getPackedId());
                 }
                 else
                 {
