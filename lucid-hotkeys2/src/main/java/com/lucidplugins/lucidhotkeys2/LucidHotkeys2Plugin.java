@@ -382,7 +382,7 @@ public class LucidHotkeys2Plugin extends Plugin implements KeyListener
      */
     private void handleHotkey(int hotkeyIndex)
     {
-        String rawConfig = cleanseInput(getHotkeyExpression(hotkeyIndex));
+        String rawConfig = cleanseInput(getHotkeyExpression(hotkeyIndex), true);
 
         if (!rawConfig.contains(";") || !rawConfig.contains("?"))
         {
@@ -514,9 +514,11 @@ public class LucidHotkeys2Plugin extends Plugin implements KeyListener
         switch (comparisonOperator)
         {
             case "==":
-                return bothValuesIntegers ? (int) value1 == (int) value2 : value1.equals(value2);
+                return bothValuesIntegers ? (int) value1 == (int) value2 : String.valueOf(value1).equals(String.valueOf(value2));
             case "!=":
-                return bothValuesIntegers ? (int) value1 != (int) value2 : !value1.equals(value2);
+                return bothValuesIntegers ? (int) value1 != (int) value2 : !String.valueOf(value1).equals(String.valueOf(value2));
+            case "~=":
+                return String.valueOf(value1).contains(String.valueOf(value2));
             case ">":
                 if (!bothValuesIntegers)
                 {
@@ -3089,7 +3091,10 @@ public class LucidHotkeys2Plugin extends Plugin implements KeyListener
         {
             return "!=";
         }
-
+        else if (expression.contains("~="))
+        {
+            return "~=";
+        }
         else if (expression.contains(">="))
         {
             return ">=";
@@ -3114,12 +3119,13 @@ public class LucidHotkeys2Plugin extends Plugin implements KeyListener
     {
         return expression.contains("==") || expression.contains("!=") ||
                 expression.contains(">") || expression.contains(">=") ||
-                expression.contains("<") || expression.contains("<=");
+                expression.contains("<") || expression.contains("<=") ||
+                expression.contains("~=");
     }
 
-    private String cleanseInput(String input)
+    private String cleanseInput(String input, boolean removeComments)
     {
-        if (input.contains(":"))
+        if (removeComments && input.contains(":"))
         {
             StringBuilder commentRemovedSB = new StringBuilder();
             boolean commentStarted = false;
@@ -3242,7 +3248,7 @@ public class LucidHotkeys2Plugin extends Plugin implements KeyListener
             return;
         }
 
-        String[] vars = cleanseInput(config.customVariables()).strip().split(";");
+        String[] vars = cleanseInput(config.customVariables(), false).strip().split(";");
 
         for (String token : vars)
         {
