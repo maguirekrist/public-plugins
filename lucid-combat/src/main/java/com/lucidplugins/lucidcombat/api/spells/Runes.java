@@ -38,9 +38,11 @@ public enum Runes
 
     private static final Map<Integer, Integer> runes;
 
-    static {
+    static
+    {
         ImmutableMap.Builder<Integer, Integer> builder = new ImmutableMap.Builder<>();
-        for (Runes rune : values()) {
+        for (Runes rune : values())
+        {
             builder.put(rune.getItemId(), rune.getId());
         }
         runes = builder.build();
@@ -52,16 +54,19 @@ public enum Runes
     private final int itemId;
 
 
-    Runes(final int id, final int itemId) {
+    Runes(final int id, final int itemId)
+    {
         this.id = id;
         this.itemId = itemId;
     }
 
-    public static int getVarbitIndexForItemId(int itemId) {
+    public static int getVarbitIndexForItemId(int itemId)
+    {
         return runes.get(itemId);
     }
 
-    public String getName() {
+    public String getName()
+    {
         String name = this.name();
         name = name.substring(0, 1) + name.substring(1).toLowerCase();
         return name;
