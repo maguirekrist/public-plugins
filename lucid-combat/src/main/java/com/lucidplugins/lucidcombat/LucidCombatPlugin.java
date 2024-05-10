@@ -292,8 +292,8 @@ public class LucidCombatPlugin extends Plugin implements KeyListener
     @Subscribe
     private void onMenuOptionClicked(MenuOptionClicked event)
     {
-        if (config.specIfEquipped() && event.getMenuOption().equals("Wield") && (!config.specWeapon().isEmpty() && event.getMenuTarget().contains(config.specWeapon())))
-        {
+        if (config.specIfEquipped() && (event.getMenuOption().equals("Wield") || event.getMenuOption().equals("Wear")) && (!config.specWeapon().isEmpty() && event.getMenuTarget().contains(config.specWeapon())))
+       {
             lastTarget = client.getLocalPlayer().getInteracting();
 
             if (EquipmentUtils.getWepSlotItem() != null)
@@ -645,7 +645,14 @@ public class LucidCombatPlugin extends Plugin implements KeyListener
         if (nonSpecWeaponId != -1 && !isSpeccing)
         {
             lastTarget = client.getLocalPlayer().getInteracting();
-            InventoryUtils.itemInteract(nonSpecWeaponId, "Wield");
+            if (InventoryUtils.itemHasAction(client, nonSpecWeaponId, "Wield"))
+            {
+                InventoryUtils.itemInteract(nonSpecWeaponId, "Wield");
+            }
+            else if (InventoryUtils.itemHasAction(client, nonSpecWeaponId, "Wear"))
+            {
+                InventoryUtils.itemInteract(nonSpecWeaponId, "Wear");
+            }
 
             if (offhandWeaponID != -1)
             {
@@ -691,8 +698,16 @@ public class LucidCombatPlugin extends Plugin implements KeyListener
 
                     if (lastTarget != null)
                     {
-                        InventoryUtils.itemInteract(specWeapon.getId(), "Wield");
-                        equippedItem = true;
+                        if (InventoryUtils.itemHasAction(client, specWeapon.getId(), "Wield"))
+                        {
+                            InventoryUtils.itemInteract(specWeapon.getId(), "Wield");
+                            equippedItem = true;
+                        }
+                        else if (InventoryUtils.itemHasAction(client, specWeapon.getId(), "Wear"))
+                        {
+                            InventoryUtils.itemInteract(specWeapon.getId(), "Wear");
+                            equippedItem = true;
+                        }
                     }
                 }
             }
