@@ -224,11 +224,11 @@ public class Reachable
                         x = startY;
 
                         label183:
-                        while(true)
+                        while (true)
                         {
                             if (x > endY)
                             {
-                                for(x = startY + 1; x <= endY; ++x)
+                                for (x = startY + 1; x <= endY; ++x)
                                 {
                                     if ((collisionDataFlags[checkX][x] & xWallFlagsSouth) != 0)
                                     {
@@ -238,7 +238,7 @@ public class Reachable
 
                                 x = endY - 1;
 
-                                while(true)
+                                while (true)
                                 {
                                     if (x < startY)
                                     {
@@ -268,11 +268,11 @@ public class Reachable
                         x = startX;
 
                         label156:
-                        while(true)
+                        while (true)
                         {
                             if (x > endX)
                             {
-                                for(x = startX + 1; x <= endX; ++x)
+                                for (x = startX + 1; x <= endX; ++x)
                                 {
                                     if ((collisionDataFlags[x][checkY] & yWallFlagsWest) != 0)
                                     {
@@ -282,7 +282,7 @@ public class Reachable
 
                                 x = endX - 1;
 
-                                while(true)
+                                while (true)
                                 {
                                     if (x < startX)
                                     {
