@@ -5,6 +5,7 @@ import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.widgets.Widget;
 import net.unethicalite.api.entities.TileItems;
 import net.unethicalite.api.movement.Movement;
+import net.unethicalite.api.movement.Reachable;
 import net.unethicalite.api.packets.WidgetPackets;
 import net.unethicalite.client.Static;
 
@@ -338,4 +339,8 @@ public class InteractionUtils
         return TileItems.getNearest(filter);
     }
 
+    public static boolean isWalkable(WorldPoint point)
+    {
+        return Reachable.isWalkable(point);
+    }
 }
