@@ -811,7 +811,7 @@ public class LucidCombatPlugin extends Plugin implements KeyListener
                 lastTarget = client.getLocalPlayer().getInteracting();
             }
 
-            InteractionUtils.interactWithTileItem(nearest.getId(), "Take");
+            InteractionUtils.interactWithTileItem(nearest, "Take");
             lastLootedTile = nearest.getLocalLocation();
 
             if (!client.getLocalPlayer().getLocalLocation().equals(nearest.getLocalLocation()))

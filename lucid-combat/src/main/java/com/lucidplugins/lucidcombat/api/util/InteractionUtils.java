@@ -103,6 +103,14 @@ public class InteractionUtils
         }
     }
 
+    public static void interactWithTileItem(TileItem tileItem, String action)
+    {
+        if (tileItem != null)
+        {
+            tileItem.interact(action);
+        }
+    }
+
     public static void interactWithTileItem(String name, String action)
     {
         TileItem item = TileItems.getNearest(tileItem -> tileItem.getName().toLowerCase().contains(name.toLowerCase()));
