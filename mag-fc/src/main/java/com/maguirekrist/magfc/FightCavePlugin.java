@@ -118,11 +118,11 @@ public class FightCavePlugin extends Plugin
     @Getter(AccessLevel.PACKAGE)
     private List<Integer> meleeTicks = new ArrayList<>();
     @Getter(AccessLevel.PACKAGE)
-    private boolean mageSpawned;
+    private int magesAlive = 0;
     @Getter(AccessLevel.PACKAGE)
-    private boolean rangedSpawned;
+    private int rangersAlive = 0;
     @Getter(AccessLevel.PACKAGE)
-    private boolean meleeSpawned;
+    private int meleesAlive = 0;
 
     public static int drinkTickTimeout = 0;
 
@@ -226,7 +226,7 @@ public class FightCavePlugin extends Plugin
             {
                 if (isWithinAttackingRange(npc, 15)) {
                     log.info("predict mage attack from spawn in range");
-                    mageSpawned = true;
+                    magesAlive++;
                 }
                 fightCaveContainer.add(new FightCaveContainer(npc));
                 break;
@@ -237,7 +237,7 @@ public class FightCavePlugin extends Plugin
             {
                 if (isWithinAttackingRange(npc, 15)) {
                     log.info("predict range attack from spawn in range");
-                    rangedSpawned = true;
+                    rangersAlive++;
                 }
                 fightCaveContainer.add(new FightCaveContainer(npc));
                 break;
@@ -247,7 +247,7 @@ public class FightCavePlugin extends Plugin
             {
                 if (isWithinAttackingRange(npc, 1)) {
                     log.info("predict melee attack from spawn in range");
-                    meleeSpawned = true;
+                    meleesAlive++;
                 }
                 fightCaveContainer.add(new FightCaveContainer(npc));
                 break;
@@ -351,12 +351,16 @@ public class FightCavePlugin extends Plugin
 
         switch (npc.getId())
         {
+            case NpcID.TOKXIL:
             case NpcID.TOKXIL_3121:
             case NpcID.TOKXIL_3122:
+                rangersAlive--;
             case NpcID.YTMEJKOT:
             case NpcID.YTMEJKOT_3124:
+                meleesAlive--;
             case NpcID.KETZEK:
             case NpcID.KETZEK_3126:
+                magesAlive--;
             case NpcID.TZTOKJAD:
             case NpcID.TZTOKJAD_6506:
                 fightCaveContainer.removeIf(c -> c.getNpc() == npc);
@@ -421,6 +425,8 @@ public class FightCavePlugin extends Plugin
                     }
                 }
             }
+
+
             switch (npc.getNpc().getId()) {
                 case NpcID.TOKXIL_3121:
                 case NpcID.TOKXIL_3122: {
@@ -450,6 +456,7 @@ public class FightCavePlugin extends Plugin
                     break;
                 }
             }
+
             if (!npc.getNpcName().equals("TzTok-Jad") && !npc.getNpc().isDead())
             {
                 switch (npc.getAttackStyle())
@@ -479,36 +486,34 @@ public class FightCavePlugin extends Plugin
                 Collections.sort(meleeTicks);
             }
         }
-        boolean needToggle = true;
-        if ((!mageTicks.isEmpty() && mageTicks.get(0) == 1) || mageSpawned) {
+
+        if (magesAlive > 0) {
             enablePrayer(Prayer.PROTECT_FROM_MAGIC, ticks);
-            mageSpawned = false;
-        } else if ((!rangedTicks.isEmpty() && rangedTicks.get(0) == 1) || mageSpawned) {
+            //mageSpawned = false;
+        } else if (rangersAlive > 0 && magesAlive == 0 && meleesAlive == 0) {
             enablePrayer(Prayer.PROTECT_FROM_MISSILES, ticks);
-            rangedSpawned = false;
-        } else if (!meleeTicks.isEmpty() && meleeTicks.get(0) == 1 || meleeSpawned) {
+            //rangedSpawned = false;
+        } else if (meleesAlive > 0 && magesAlive == 0 && rangersAlive == 0) {
             enablePrayer(Prayer.PROTECT_FROM_MELEE, ticks);
-            meleeSpawned = false;
-        } else {
-            needToggle = false;
+            //meleeSpawned = false;
         }
 
         //check if we need to move off mager or ranger tiles
-        List<NPC> npcList = fightCaveContainer.stream()
-                .map(FightCaveContainer::getNpc)
-                .filter(npc -> npc.getId() == NpcID.TOKXIL_3121
-                        || npc.getId() == NpcID.TOKXIL_3122
-                        || npc.getId() == NpcID.KETZEK
-                        || npc.getId() == NpcID.KETZEK_3126
-                        || npc.getId() == NpcID.TZTOKJAD
-                        || npc.getId() == NpcID.TZTOKJAD_6506)
-                .collect(Collectors.toList());
-        WorldPoint safeTile = findNearestSafeTile(npcList);
-        if (safeTile != null && !safeTile.equals(Players.getLocal().getWorldLocation())) {
-            log.info("UNSAFE TILE! WOAH");
-            shortSleep();
-            Movement.walk(safeTile);
-        }
+//        List<NPC> npcList = fightCaveContainer.stream()
+//                .map(FightCaveContainer::getNpc)
+//                .filter(npc -> npc.getId() == NpcID.TOKXIL_3121
+//                        || npc.getId() == NpcID.TOKXIL_3122
+//                        || npc.getId() == NpcID.KETZEK
+//                        || npc.getId() == NpcID.KETZEK_3126
+//                        || npc.getId() == NpcID.TZTOKJAD
+//                        || npc.getId() == NpcID.TZTOKJAD_6506)
+//                .collect(Collectors.toList());
+//        WorldPoint safeTile = findNearestSafeTile(npcList);
+//        if (safeTile != null && !safeTile.equals(Players.getLocal().getWorldLocation())) {
+//            log.info("UNSAFE TILE! WOAH");
+//            shortSleep();
+//            Movement.walk(safeTile);
+//        }
 
         if (config.drinkSara() && Skills.getBoostedLevel(Skill.HITPOINTS) <= config.healSetpoint() && drinkTickTimeout < 0) {
             if (!drinkingSara) {
@@ -543,12 +548,13 @@ public class FightCavePlugin extends Plugin
         }
 
         //if no prayers enabled this tick, preserve existing prayer when config enabled, otherwise turn off existing prayers
-        if (!needToggle) {
-            flick(ticks);
-        }
+//        if (!needToggle && config.flick()) {
+//            flick(ticks);
+//        }
 
         if (drinkTickTimeout >= -5) drinkTickTimeout--;
     }
+
     public static boolean drinkingSara = false;
     public static int saraDosesToStopAt = 0;
     public static int calculateSaraBoost() {
