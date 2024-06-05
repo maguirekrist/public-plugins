@@ -1,5 +1,4 @@
 package com.maguirekrist.magfc;
-import com.google.common.collect.ImmutableSet;
 import com.google.inject.Provides;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,10 +26,7 @@ import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.overlay.OverlayManager;
-import net.unethicalite.api.Interactable;
-import net.unethicalite.api.commons.Rand;
 import net.unethicalite.api.commons.Time;
-import net.unethicalite.api.entities.NPCs;
 import net.unethicalite.api.entities.Players;
 import net.unethicalite.api.game.Skills;
 import net.unethicalite.api.items.Inventory;
@@ -43,9 +39,9 @@ import org.pf4j.Extension;
 @Slf4j
 @Extension
 @PluginDescriptor(
-        name = "420xFight Cave",
+        name = "Fight Caves Helper",
         enabledByDefault = false,
-        description = "Displays current and upcoming wave monsters in the Fight Caves and what to pray at TzTok-Jad",
+        description = "Some bullshit plugin.",
         tags = {"bosses", "combat", "minigame", "overlay", "pve", "pvm", "jad", "fire", "cape", "wave"}
 )
 public class FightCavePlugin extends Plugin

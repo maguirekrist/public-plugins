@@ -23,8 +23,8 @@ apply<CheckstylePlugin>()
 allprojects {
     group = "com.lucidplugins"
 
-    project.extra["PluginProvider"] = "lucid-plugins"
-    project.extra["ProjectSupportUrl"] = "https://discord.gg/lucid-plugs"
+    project.extra["PluginProvider"] = "maguirekrist"
+    project.extra["ProjectSupportUrl"] = "https://google.com"
     project.extra["PluginLicense"] = "3-Clause BSD License"
 
     apply<JavaPlugin>()

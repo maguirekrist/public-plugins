@@ -1,12 +1,12 @@
 [{
-  "projectUrl": "https://discord.gg/lucid-plugs",
-  "provider": "lucid-plugins",
+  "projectUrl": "https://google.com",
+  "provider": "maguirekrist",
   "name": "Fight Caves Helper",
   "description": "Some bullshit plugin.",
   "id": "fightcaveshelper-plugin",
   "releases": [{
     "date": "2024-06-04",
-    "sha512sum": "58FD51ACF12890B7E235AC889B9425DD5AC6DAAA722EF287B512D1277742A59DCE03DFC49D3D8BF1BB9E8AA3B4A6EF4490EFA67C3B8925FF3E2D019556519742",
+    "sha512sum": "CC68AA8F78463A549A303B89191CD268BB30F04000B405CF039D5D0305612B443570175EEBF8D8708B15D4346B18114937D3B36787456E8B672659424EBD206E",
     "version": "1.0.1",
     "url": "https://github.com/maguirekrist/public-plugins/blob/master/release/mag-fc-1.0.1.jar?raw=true",
     "requires": "^1.0.0"
