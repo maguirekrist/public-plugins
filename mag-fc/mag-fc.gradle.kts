@@ -1,7 +1,7 @@
 version = "1.0.1"
 
-project.extra["PluginName"] = "Lucid Example"
-project.extra["PluginDescription"] = "An example plugin that can be copied to use as a plugin skeleton. Does nothing functionally."
+project.extra["PluginName"] = "Fight Caves Helper"
+project.extra["PluginDescription"] = "Some bullshit plugin."
 
 
 dependencies {

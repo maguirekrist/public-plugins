@@ -1,12 +1,12 @@
 [{
   "projectUrl": "https://discord.gg/lucid-plugs",
   "provider": "lucid-plugins",
-  "name": "Lucid Example",
-  "description": "An example plugin that can be copied to use as a plugin skeleton. Does nothing functionally.",
-  "id": "lucidexample-plugin",
+  "name": "Fight Caves Helper",
+  "description": "Some bullshit plugin.",
+  "id": "fightcaveshelper-plugin",
   "releases": [{
     "date": "2024-06-04",
-    "sha512sum": "6F03B2D27457A630B5AC7F798EA5922FAB32CDB83515E4EB791BF269EE9FBDF5549CFD0A26B469873A4A99BF475F8ED0AB215CC45CE4C0041E48C56D78A751D0",
+    "sha512sum": "58FD51ACF12890B7E235AC889B9425DD5AC6DAAA722EF287B512D1277742A59DCE03DFC49D3D8BF1BB9E8AA3B4A6EF4490EFA67C3B8925FF3E2D019556519742",
     "version": "1.0.1",
     "url": "https://github.com/maguirekrist/public-plugins/blob/master/release/mag-fc-1.0.1.jar?raw=true",
     "requires": "^1.0.0"
