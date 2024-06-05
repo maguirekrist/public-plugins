@@ -6,9 +6,9 @@
   "id": "fightcaveshelper-plugin",
   "releases": [{
     "date": "2024-06-05",
-    "sha512sum": "77EF97E46F38FDBC29D087B964C0BC9AB5B0E4CAE75BAD480348C48618F7E432FDE6BA7556BCA441F6BBF9BA37FE4CFD5D57F6F8E3697FF31F784350D88B5FE5",
-    "version": "1.0.2",
-    "url": "https://github.com/maguirekrist/public-plugins/blob/master/release/mag-fc-1.0.2.jar?raw=true",
+    "sha512sum": "9E7F03E6A9A7E47E9DBACC1BFB9A7269AC34826B4025B73451C4C5DC050C049A43137DFD26C0B4C25C4C8B2E7E5E1117D313E3126672CAB00A9D6E3E22509B64",
+    "version": "1.0.3",
+    "url": "https://github.com/maguirekrist/public-plugins/blob/master/release/mag-fc-1.0.3.jar?raw=true",
     "requires": "^1.0.0"
   }]
 }]

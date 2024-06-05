@@ -123,6 +123,8 @@ public class FightCavePlugin extends Plugin
     private int rangersAlive = 0;
     @Getter(AccessLevel.PACKAGE)
     private int meleesAlive = 0;
+    @Getter(AccessLevel.PACKAGE)
+    private boolean fightingJad;
 
     public static int drinkTickTimeout = 0;
 
@@ -226,8 +228,8 @@ public class FightCavePlugin extends Plugin
             {
                 if (isWithinAttackingRange(npc, 15)) {
                     log.info("predict mage attack from spawn in range");
-                    magesAlive++;
                 }
+                magesAlive++;
                 fightCaveContainer.add(new FightCaveContainer(npc));
                 break;
             }
@@ -237,8 +239,8 @@ public class FightCavePlugin extends Plugin
             {
                 if (isWithinAttackingRange(npc, 15)) {
                     log.info("predict range attack from spawn in range");
-                    rangersAlive++;
                 }
+                rangersAlive++;
                 fightCaveContainer.add(new FightCaveContainer(npc));
                 break;
             }
@@ -247,13 +249,14 @@ public class FightCavePlugin extends Plugin
             {
                 if (isWithinAttackingRange(npc, 1)) {
                     log.info("predict melee attack from spawn in range");
-                    meleesAlive++;
                 }
+                meleesAlive++;
                 fightCaveContainer.add(new FightCaveContainer(npc));
                 break;
             }
             case NpcID.TZTOKJAD:
             case NpcID.TZTOKJAD_6506:
+                fightingJad = true;
                 fightCaveContainer.add(new FightCaveContainer(npc));
                 break;
         }
@@ -355,12 +358,18 @@ public class FightCavePlugin extends Plugin
             case NpcID.TOKXIL_3121:
             case NpcID.TOKXIL_3122:
                 rangersAlive--;
+                fightCaveContainer.removeIf(c -> c.getNpc() == npc);
+                break;
             case NpcID.YTMEJKOT:
             case NpcID.YTMEJKOT_3124:
                 meleesAlive--;
+                fightCaveContainer.removeIf(c -> c.getNpc() == npc);
+                break;
             case NpcID.KETZEK:
             case NpcID.KETZEK_3126:
                 magesAlive--;
+                fightCaveContainer.removeIf(c -> c.getNpc() == npc);
+                break;
             case NpcID.TZTOKJAD:
             case NpcID.TZTOKJAD_6506:
                 fightCaveContainer.removeIf(c -> c.getNpc() == npc);
@@ -487,15 +496,14 @@ public class FightCavePlugin extends Plugin
             }
         }
 
-        if (magesAlive > 0) {
-            enablePrayer(Prayer.PROTECT_FROM_MAGIC, ticks);
-            //mageSpawned = false;
-        } else if (rangersAlive > 0 && magesAlive == 0 && meleesAlive == 0) {
-            enablePrayer(Prayer.PROTECT_FROM_MISSILES, ticks);
-            //rangedSpawned = false;
-        } else if (meleesAlive > 0 && magesAlive == 0 && rangersAlive == 0) {
-            enablePrayer(Prayer.PROTECT_FROM_MELEE, ticks);
-            //meleeSpawned = false;
+        if(!fightingJad) {
+            if (magesAlive > 0) {
+                enablePrayer(Prayer.PROTECT_FROM_MAGIC, ticks);
+            } else if (rangersAlive > 0 && magesAlive == 0 && meleesAlive == 0) {
+                enablePrayer(Prayer.PROTECT_FROM_MISSILES, ticks);
+            } else if (meleesAlive > 0 && magesAlive == 0 && rangersAlive == 0) {
+                enablePrayer(Prayer.PROTECT_FROM_MELEE, ticks);
+            }
         }
 
         //check if we need to move off mager or ranger tiles
@@ -546,11 +554,6 @@ public class FightCavePlugin extends Plugin
                 drinkTickTimeout = 3;
             }
         }
-
-        //if no prayers enabled this tick, preserve existing prayer when config enabled, otherwise turn off existing prayers
-//        if (!needToggle && config.flick()) {
-//            flick(ticks);
-//        }
 
         if (drinkTickTimeout >= -5) drinkTickTimeout--;
     }
