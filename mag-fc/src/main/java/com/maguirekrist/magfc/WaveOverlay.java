@@ -74,7 +74,21 @@ class WaveOverlay extends Overlay
             addWaveInfo("Next wave", waveContents2);
         }
 
+        addMonsterCounter();
+
         return panelComponent.render(graphics);
+    }
+
+    private void addMonsterCounter() {
+        panelComponent.getChildren().add(TitleComponent.builder().text("Monsters").color(HEADER_COLOR).build());
+        TableComponent tableComponent = new TableComponent();
+        tableComponent.setColumnAlignments(TableAlignment.CENTER);
+
+        tableComponent.addRow("Mages: " + plugin.getMagesAlive());
+        tableComponent.addRow("Rangers: " + plugin.getRangersAlive());
+        tableComponent.addRow("Melees: " + plugin.getMeleesAlive());
+
+        panelComponent.getChildren().add(tableComponent);
     }
 
     private void addWaveInfo(final String headerText, final Map<WaveMonster, Integer> waveContents)
