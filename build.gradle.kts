@@ -12,8 +12,8 @@ plugins {
     kotlin("kapt") version "1.6.21"
 }
 
-project.extra["GithubUrl"] = "https://github.com/lucid-plugins/public-plugins"
-project.extra["GithubUserName"] = "lucid-plugins"
+project.extra["GithubUrl"] = "https://github.com/maguirekrist/public-plugins"
+project.extra["GithubUserName"] = "maguirekrist"
 project.extra["GithubRepoName"] = "public-plugins"
 
 apply<JavaLibraryPlugin>()
@@ -29,7 +29,6 @@ allprojects {
 
     apply<JavaPlugin>()
     apply(plugin = "java-library")
-    apply(plugin = "checkstyle")
     apply(plugin = "kotlin")
 
     repositories {
