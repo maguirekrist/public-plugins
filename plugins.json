@@ -11,4 +11,17 @@
     "url": "https://github.com/maguirekrist/public-plugins/blob/master/release/mag-fc-1.0.3.jar?raw=true",
     "requires": "^1.0.0"
   }]
+}, {
+  "projectUrl": "https://google.com",
+  "provider": "maguirekrist",
+  "name": "Mag Fighter",
+  "description": "Another bullshit plugin.",
+  "id": "magfighter-plugin",
+  "releases": [{
+    "date": "2024-06-06",
+    "sha512sum": "D21E2A3E78D7DA298CDF17A4E679D128E7E63C835977B48003CD436A37C827ED03C3C68FD60D66C8105192A5B60DCFB7369659878211CE05FC18D4D4AE1F670F",
+    "version": "1.0.1",
+    "url": "https://github.com/maguirekrist/public-plugins/blob/master/release/mag-fighter-1.0.1.jar?raw=true",
+    "requires": "^1.0.0"
+  }]
 }]

@@ -21,7 +21,7 @@ apply<BootstrapPlugin>()
 apply<CheckstylePlugin>()
 
 allprojects {
-    group = "com.lucidplugins"
+    group = "com.maguirekrist"
 
     project.extra["PluginProvider"] = "maguirekrist"
     project.extra["ProjectSupportUrl"] = "https://google.com"
