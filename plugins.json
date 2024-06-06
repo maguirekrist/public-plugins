@@ -19,9 +19,9 @@
   "id": "magfighter-plugin",
   "releases": [{
     "date": "2024-06-06",
-    "sha512sum": "94E5E4F175CA49716DDEE8586A69332254E7BF30FEFBA4E6199CEBA889FE8303AAA59925B520615767628ED92CE232C112BE0E7BDCF88CDC542B9DD0AAE4066D",
-    "version": "1.0.1",
-    "url": "https://github.com/maguirekrist/public-plugins/blob/master/release/mag-fighter-1.0.1.jar?raw=true",
+    "sha512sum": "2766B63FD8009EC42F8DDE80446C46ABA6EC582F78D58EDFC8C33D42DDE41AF1D81E0C7771195826E3753437B5EDA83BDFA1DC6A17991050AA773F5C65B2DF31",
+    "version": "1.0.2",
+    "url": "https://github.com/maguirekrist/public-plugins/blob/master/release/mag-fighter-1.0.2.jar?raw=true",
     "requires": "^1.0.0"
   }]
 }]
