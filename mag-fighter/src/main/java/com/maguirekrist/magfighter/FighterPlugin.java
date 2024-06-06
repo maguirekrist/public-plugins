@@ -1,10 +1,12 @@
 package com.maguirekrist.magfighter;
 
+import com.google.inject.Provides;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.NPC;
 import net.runelite.api.events.GameTick;
 import net.runelite.client.callback.ClientThread;
+import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.game.NpcUtil;
@@ -31,6 +33,12 @@ import javax.inject.Inject;
 public class FighterPlugin extends Plugin {
 
     private String monsterToAttack;
+
+    @Provides
+    FighterPluginConfig provideConfig(ConfigManager configManager)
+    {
+        return configManager.getConfig(FighterPluginConfig.class);
+    }
 
     @Inject
     FighterPluginConfig config;
