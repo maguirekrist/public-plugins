@@ -5,7 +5,7 @@
   "description": "Some bullshit plugin.",
   "id": "fightcaveshelper-plugin",
   "releases": [{
-    "date": "2024-06-05",
+    "date": "2024-06-06",
     "sha512sum": "9E7F03E6A9A7E47E9DBACC1BFB9A7269AC34826B4025B73451C4C5DC050C049A43137DFD26C0B4C25C4C8B2E7E5E1117D313E3126672CAB00A9D6E3E22509B64",
     "version": "1.0.3",
     "url": "https://github.com/maguirekrist/public-plugins/blob/master/release/mag-fc-1.0.3.jar?raw=true",
@@ -19,7 +19,7 @@
   "id": "magfighter-plugin",
   "releases": [{
     "date": "2024-06-06",
-    "sha512sum": "D21E2A3E78D7DA298CDF17A4E679D128E7E63C835977B48003CD436A37C827ED03C3C68FD60D66C8105192A5B60DCFB7369659878211CE05FC18D4D4AE1F670F",
+    "sha512sum": "94E5E4F175CA49716DDEE8586A69332254E7BF30FEFBA4E6199CEBA889FE8303AAA59925B520615767628ED92CE232C112BE0E7BDCF88CDC542B9DD0AAE4066D",
     "version": "1.0.1",
     "url": "https://github.com/maguirekrist/public-plugins/blob/master/release/mag-fighter-1.0.1.jar?raw=true",
     "requires": "^1.0.0"

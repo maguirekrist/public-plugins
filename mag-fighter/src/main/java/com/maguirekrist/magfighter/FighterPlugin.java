@@ -4,7 +4,9 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.NPC;
 import net.runelite.api.events.GameTick;
+import net.runelite.client.callback.ClientThread;
 import net.runelite.client.eventbus.Subscribe;
+import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.game.NpcUtil;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
@@ -28,13 +30,19 @@ import javax.inject.Inject;
 )
 public class FighterPlugin extends Plugin {
 
-    private final String MonsterToFight = "Greater Demons";
+    private String monsterToAttack;
+
+    @Inject
+    FighterPluginConfig config;
 
     @Inject
     private Client client;
 
     @Inject
     private Combat combat;
+
+    @Inject
+    private ClientThread clientThread;
 
     @Override
     protected void startUp() throws Exception {
@@ -47,11 +55,25 @@ public class FighterPlugin extends Plugin {
     }
 
     @Subscribe
+    private void onConfigChanged(ConfigChanged event)
+    {
+        log.info("Config changed");
+        if (!event.getKey().equals("bot"))
+        {
+            return;
+        }
+
+        clientThread.invoke(() -> {
+            monsterToAttack = config.monsterToAttack();
+        });
+    }
+
+    @Subscribe
     private void onGameTick(GameTick Event) {
         if(isInCombat()) {
             return;
         } else {
-            NPC target = Combat.getAttackableNPC(this.MonsterToFight);
+            NPC target = Combat.getAttackableNPC(monsterToAttack);
             if(target != null) {
                 log.info("Attacking {}", target.getName());
                 target.interact("attack");
